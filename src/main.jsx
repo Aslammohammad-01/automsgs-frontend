@@ -7,6 +7,11 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Terms from "./pages/Terms";
 import DataDeletion from "./pages/DataDeletion";
 import Contact from "./pages/Contact";
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
+import VerifyOtp from "./pages/VerifyOtp";
+
+
 
 import "./index.css";
 
@@ -19,6 +24,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/terms" element={<Terms />} />
         <Route path="/data-deletion" element={<DataDeletion />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/verify-otp" element={<VerifyOtp />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
