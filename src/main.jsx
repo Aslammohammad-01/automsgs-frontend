@@ -2,16 +2,16 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Home from "./pages/Home";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import Terms from "./pages/Terms";
-import DataDeletion from "./pages/DataDeletion";
-import Contact from "./pages/Contact";
-import Signup from "./pages/Signup";
-import Login from "./pages/Login";
-import VerifyOtp from "./pages/VerifyOtp";
-import Dashboard from "./pages/Dashboard";
-import ProtectedRoute from "./components/ProtectedRoute";
+import Home from "./pages/Home.jsx";
+import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
+import Terms from "./pages/Terms.jsx";
+import DataDeletion from "./pages/DataDeletion.jsx";
+import Contact from "./pages/Contact.jsx";
+import Signup from "./pages/Signup.jsx";
+import Login from "./pages/Login.jsx";
+import VerifyOtp from "./pages/VerifyOtp.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 import "./index.css";
 
