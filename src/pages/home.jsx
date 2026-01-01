@@ -2,7 +2,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-white text-gray-900">
 
-      {/* ================= NAVBAR ================= */}
+      {/* ================== NAVBAR ================= */}
       <header className="border-b">
         <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
           <a
