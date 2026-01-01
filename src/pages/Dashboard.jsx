@@ -5,8 +5,18 @@ const API_BASE_URL =
 
 export default function Dashboard() {
   const handleConnectInstagram = () => {
-    // 🔐 Redirect to backend OAuth start (Meta approved)
-    window.location.href = `${API_BASE_URL}/auth/instagram/start`;
+    // ✅ Get userId saved during login
+    const userId = localStorage.getItem("userId");
+
+    if (!userId) {
+      alert("Session expired. Please login again.");
+      logout();
+      return;
+    }
+
+    // 🔐 Redirect to backend OAuth start with state=userId
+    window.location.href =
+      `${API_BASE_URL}/auth/instagram/start?userId=${userId}`;
   };
 
   return (
