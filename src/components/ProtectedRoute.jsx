@@ -21,7 +21,14 @@ export default function ProtectedRoute({ children }) {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return null; // or spinner
+  if (loading) {
+   return (
+     <div className="min-h-screen flex items-center justify-center">
+      <p className="text-gray-600 text-lg">Checking session…</p>
+     </div>
+   );
+ }
+ // or spinner
 
   if (!authorized) {
     return <Navigate to="/login" replace />;
