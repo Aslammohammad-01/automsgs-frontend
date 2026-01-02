@@ -1,12 +1,8 @@
-export const getToken = () => {
-  return localStorage.getItem("token");
-};
+export const logout = async () => {
+  await fetch("/api/logout", {
+    method: "POST",
+    credentials: "include",
+  });
 
-export const isAuthenticated = () => {
-  return !!getToken();
-};
-
-export const logout = () => {
-  localStorage.removeItem("token");
   window.location.href = "/login";
 };
