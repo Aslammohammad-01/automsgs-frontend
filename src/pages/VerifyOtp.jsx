@@ -1,55 +1,48 @@
 import { useState } from "react";
 import { API_BASE_URL } from "../config";
+import AuthLayout from "../components/AuthLayout";
 
 export default function VerifyOtp() {
   const params = new URLSearchParams(window.location.search);
   const email = params.get("email");
 
   const [otp, setOtp] = useState("");
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
-  const handleVerify = async (e) => {
+  const verifyOtp = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
+    setMessage("");
 
-    try {
-      const res = await fetch(`${API_BASE_URL}/verify-otp`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, otp }),
-      });
+    const res = await fetch(`${API_BASE_URL}/verify-otp`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, otp }),
+    });
 
-      const text = await res.text(); // IMPORTANT (backend returns text)
+    const data = await res.json();
+    setLoading(false);
 
-      if (!res.ok) {
-        throw new Error(text || "OTP verification failed");
-      }
-
-      // ✅ success
+    if (res.ok) {
       window.location.href = "/login";
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+    } else {
+      setMessage(data.message || "Invalid OTP");
     }
   };
 
+  const resendOtp = async () => {
+    await fetch(`${API_BASE_URL}/resend-otp`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    setMessage("OTP resent to your email.");
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <form
-        onSubmit={handleVerify}
-        className="bg-white p-8 rounded-xl shadow max-w-md w-full"
-      >
-        <h2 className="text-2xl font-bold mb-6 text-center">
-          Verify OTP
-        </h2>
-
-        <p className="text-sm text-gray-600 mb-4">
-          OTP sent to <strong>{email}</strong>
-        </p>
-
+    <AuthLayout title="Verify OTP">
+      <form onSubmit={verifyOtp}>
         <input
           type="text"
           placeholder="Enter OTP"
@@ -59,19 +52,22 @@ export default function VerifyOtp() {
           onChange={(e) => setOtp(e.target.value)}
         />
 
-        {error && (
-          <p className="text-red-600 text-sm mb-3">
-            {error}
-          </p>
-        )}
+        {message && <p className="text-sm text-center mb-3">{message}</p>}
 
         <button
           disabled={loading}
-          className="w-full bg-blue-600 text-white py-3 rounded hover:bg-blue-700 disabled:opacity-60"
+          className="w-full bg-blue-600 text-white py-3 rounded"
         >
-          {loading ? "Verifying..." : "Verify"}
+          {loading ? "Verifying..." : "Verify OTP"}
         </button>
       </form>
-    </div>
+
+      <button
+        onClick={resendOtp}
+        className="text-blue-600 text-sm mt-4 block mx-auto"
+      >
+        Resend OTP
+      </button>
+    </AuthLayout>
   );
 }

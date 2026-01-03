@@ -60,6 +60,13 @@ export default function Signup() {
         >
           {loading ? "Sending OTP..." : "Sign Up"}
         </button>
+        <p className="text-sm text-center mt-4">
+          Already have an account?{" "}
+          <a href="/login" className="text-blue-600 hover:underline">
+            Login
+         </a>
+       </p>
+
       </form>
     </AuthLayout>
   );

@@ -3,10 +3,10 @@ import { logout } from "../utils/auth";
 import { API_BASE_URL } from "../config";
 
 export default function Dashboard() {
-  // ✅ SESSION CHECK (CRITICAL)
+  // ✅ SESSION CHECK (SECONDARY SAFETY NET)
   useEffect(() => {
     fetch(`${API_BASE_URL}/me`, {
-      credentials: "include", // 🔥 REQUIRED
+      credentials: "include",
     })
       .then((res) => {
         if (res.status === 401) {
@@ -15,8 +15,8 @@ export default function Dashboard() {
         }
       })
       .catch(() => {
-        alert("Session expired. Please login again.");
-        window.location.href = "/login";
+        // ❗ Network errors only
+        console.warn("Session check failed");
       });
   }, []);
 
