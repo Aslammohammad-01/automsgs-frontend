@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { API_BASE_URL } from "../config";
+import AuthLayout from "../components/AuthLayout";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -16,7 +17,7 @@ export default function Login() {
       const res = await fetch(`${API_BASE_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
+        credentials: "include", // 🔐 cookie auth
         body: JSON.stringify({ email, password }),
       });
 
@@ -24,7 +25,7 @@ export default function Login() {
       if (!res.ok) throw new Error(text);
 
       window.location.href = "/dashboard";
-    } catch (err) {
+    } catch {
       setMessage("Login failed. Please try again.");
     } finally {
       setLoading(false);
@@ -32,44 +33,37 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-md p-8">
-        <h2 className="text-2xl font-bold text-center mb-6">
-          Login to AutoMsgs
-        </h2>
+    <AuthLayout title="Login to AutoMsgs">
+      <form onSubmit={handleLogin}>
+        <input
+          type="email"
+          placeholder="Email"
+          required
+          className="w-full border px-4 py-3 rounded mb-4"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-        <form onSubmit={handleLogin} className="space-y-4">
-          <input
-            type="email"
-            placeholder="Email"
-            className="w-full border rounded-md px-3 py-2"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full border rounded-md px-3 py-2"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
-          >
-            {loading ? "Logging in..." : "Login"}
-          </button>
-        </form>
+        <input
+          type="password"
+          placeholder="Password"
+          required
+          className="w-full border px-4 py-3 rounded mb-4"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
         {message && (
-          <p className="text-red-600 text-center mt-4">{message}</p>
+          <p className="text-red-600 text-sm mb-3">{message}</p>
         )}
-      </div>
-    </div>
+
+        <button
+          disabled={loading}
+          className="w-full bg-blue-600 text-white py-3 rounded hover:bg-blue-700"
+        >
+          {loading ? "Logging in..." : "Login"}
+        </button>
+      </form>
+    </AuthLayout>
   );
 }

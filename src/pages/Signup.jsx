@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { API_BASE_URL } from "../config";
+import AuthLayout from "../components/AuthLayout";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
@@ -29,13 +30,8 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <form
-        onSubmit={handleSignup}
-        className="bg-white p-8 rounded-xl shadow max-w-md w-full"
-      >
-        <h2 className="text-2xl font-bold mb-6 text-center">Create Account</h2>
-
+    <AuthLayout title="Create Account">
+      <form onSubmit={handleSignup}>
         <input
           type="email"
           placeholder="Email"
@@ -54,7 +50,9 @@ export default function Signup() {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        {message && <p className="text-red-600 text-sm mb-3">{message}</p>}
+        {message && (
+          <p className="text-red-600 text-sm mb-3">{message}</p>
+        )}
 
         <button
           disabled={loading}
@@ -63,6 +61,6 @@ export default function Signup() {
           {loading ? "Sending OTP..." : "Sign Up"}
         </button>
       </form>
-    </div>
+    </AuthLayout>
   );
 }
