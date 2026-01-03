@@ -9,35 +9,47 @@ export default function VerifyOtp() {
   const [otp, setOtp] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [cooldown, setCooldown] = useState(false);
 
   const verifyOtp = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
 
-    const res = await fetch(`${API_BASE_URL}/verify-otp`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, otp }),
-    });
+    try {
+      const res = await fetch(`${API_BASE_URL}/verify-otp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp }),
+      });
 
-    const data = await res.json();
-    setLoading(false);
+      const text = await res.text(); // ✅ FIX
 
-    if (res.ok) {
+      if (!res.ok) {
+        throw new Error(text || "Invalid OTP");
+      }
+
       window.location.href = "/login";
-    } else {
-      setMessage(data.message || "Invalid OTP");
+    } catch (err) {
+      setMessage(err.message);
+    } finally {
+      setLoading(false); // ✅ ALWAYS RUNS
     }
   };
 
   const resendOtp = async () => {
+    if (cooldown) return;
+
+    setCooldown(true);
+
     await fetch(`${API_BASE_URL}/resend-otp`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),
     });
+
     setMessage("OTP resent to your email.");
+    setTimeout(() => setCooldown(false), 30000);
   };
 
   return (
@@ -52,7 +64,11 @@ export default function VerifyOtp() {
           onChange={(e) => setOtp(e.target.value)}
         />
 
-        {message && <p className="text-sm text-center mb-3">{message}</p>}
+        {message && (
+          <p className="text-sm text-center mb-3 text-red-600">
+            {message}
+          </p>
+        )}
 
         <button
           disabled={loading}
@@ -64,9 +80,14 @@ export default function VerifyOtp() {
 
       <button
         onClick={resendOtp}
-        className="text-blue-600 text-sm mt-4 block mx-auto"
+        disabled={cooldown}
+        className={`text-sm mt-4 block mx-auto ${
+          cooldown
+            ? "text-gray-400 cursor-not-allowed"
+            : "text-blue-600 hover:underline"
+        }`}
       >
-        Resend OTP
+        {cooldown ? "Resend OTP in 30s" : "Resend OTP"}
       </button>
     </AuthLayout>
   );
