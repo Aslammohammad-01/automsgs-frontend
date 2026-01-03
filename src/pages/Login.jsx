@@ -15,61 +15,61 @@ export default function Login() {
     try {
       const res = await fetch(`${API_BASE_URL}/login`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", // ✅ REQUIRED
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ email, password }),
       });
 
       const text = await res.text();
+      if (!res.ok) throw new Error(text);
 
-      if (!res.ok) {
-        throw new Error(text || "Invalid login credentials");
-      }
-
-      // ✅ success → redirect
       window.location.href = "/dashboard";
     } catch (err) {
-      console.error(err);
       setMessage("Login failed. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ THIS WAS MISSING
   return (
-    <div style={{ maxWidth: 400, margin: "80px auto" }}>
-      <h2>Login</h2>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="w-full max-w-md bg-white rounded-lg shadow-md p-8">
+        <h2 className="text-2xl font-bold text-center mb-6">
+          Login to AutoMsgs
+        </h2>
 
-      <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+        <form onSubmit={handleLogin} className="space-y-4">
+          <input
+            type="email"
+            placeholder="Email"
+            className="w-full border rounded-md px-3 py-2"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
 
-        <br /><br />
+          <input
+            type="password"
+            placeholder="Password"
+            className="w-full border rounded-md px-3 py-2"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+          >
+            {loading ? "Logging in..." : "Login"}
+          </button>
+        </form>
 
-        <br /><br />
-
-        <button type="submit" disabled={loading}>
-          {loading ? "Logging in..." : "Login"}
-        </button>
-      </form>
-
-      {message && <p style={{ color: "red" }}>{message}</p>}
+        {message && (
+          <p className="text-red-600 text-center mt-4">{message}</p>
+        )}
+      </div>
     </div>
   );
 }
