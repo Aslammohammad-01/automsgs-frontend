@@ -18,7 +18,7 @@ export default function Login() {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // 🔥 REQUIRED
+        credentials: "include", // ✅ REQUIRED
         body: JSON.stringify({ email, password }),
       });
 
@@ -28,7 +28,7 @@ export default function Login() {
         throw new Error(text || "Invalid login credentials");
       }
 
-      // 🚀 SUCCESS
+      // ✅ success → redirect
       window.location.href = "/dashboard";
     } catch (err) {
       console.error(err);
@@ -38,5 +38,38 @@ export default function Login() {
     }
   };
 
-  // (You may want to return JSX here)
+  // ✅ THIS WAS MISSING
+  return (
+    <div style={{ maxWidth: 400, margin: "80px auto" }}>
+      <h2>Login</h2>
+
+      <form onSubmit={handleLogin}>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+
+        <br /><br />
+
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+
+        <br /><br />
+
+        <button type="submit" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
+      </form>
+
+      {message && <p style={{ color: "red" }}>{message}</p>}
+    </div>
+  );
 }
