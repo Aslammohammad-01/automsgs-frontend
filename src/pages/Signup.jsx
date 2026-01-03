@@ -25,7 +25,13 @@ export default function Signup() {
     if (res.ok) {
       window.location.href = `/verify-otp?email=${email}`;
     } else {
-      setMessage(data.message || "Signup failed");
+      if (res.status === 409) {
+        setMessage(
+          "Account already exists. Please login or use Forgot Password."
+        );
+      } else {
+        setMessage(data.message || "Signup failed");
+      }
     }
   };
 
@@ -60,13 +66,13 @@ export default function Signup() {
         >
           {loading ? "Sending OTP..." : "Sign Up"}
         </button>
+
         <p className="text-sm text-center mt-4">
           Already have an account?{" "}
           <a href="/login" className="text-blue-600 hover:underline">
             Login
-         </a>
-       </p>
-
+          </a>
+        </p>
       </form>
     </AuthLayout>
   );

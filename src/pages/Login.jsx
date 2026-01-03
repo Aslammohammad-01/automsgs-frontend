@@ -48,10 +48,20 @@ export default function Login() {
           type="password"
           placeholder="Password"
           required
-          className="w-full border px-4 py-3 rounded mb-4"
+          className="w-full border px-4 py-3 rounded mb-2"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+
+        {/* ✅ ADDED: Forgot password link */}
+        <div className="text-right mb-4">
+          <a
+            href="/forgot-password"
+            className="text-sm text-blue-600 hover:underline"
+          >
+            Forgot password?
+          </a>
+        </div>
 
         {message && (
           <p className="text-red-600 text-sm mb-3">{message}</p>
@@ -63,13 +73,13 @@ export default function Login() {
         >
           {loading ? "Logging in..." : "Login"}
         </button>
-         <p className="text-sm text-center mt-4">
-             Don’t have an account?{" "}
-              <a href="/signup" className="text-blue-600 hover:underline">
-               Sign up
-              </a>
-          </p>
-        
+
+        <p className="text-sm text-center mt-4">
+          Don’t have an account?{" "}
+          <a href="/signup" className="text-blue-600 hover:underline">
+            Sign up
+          </a>
+        </p>
       </form>
     </AuthLayout>
   );
